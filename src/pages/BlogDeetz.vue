@@ -11,19 +11,27 @@
         :disabled="!this.$auth.isAuthenticated"
         @click="deleteBlog"
       >Delete Blog?</button>
-      <!-- <form @submit="">
-        <div class="form-grou text-center">
-          <div class="input-group-prepend">
+      <button
+        type="button"
+        class="btn btn-success ml-2"
+        data-toggle="modal"
+        data-target="#create-comment-modal"
+        v-if="this.$auth.isAuthenticated"
+      >Add Comment</button>
+      <QuickModal id="create-comment-modal">
+        <div slot="header">Add Comment</div>
+        <form @submit="addComment" slot="body">
+          <div class="form-group">
             <input
+              v-model="comment"
               type="text"
               class="form-control"
-              placeholder="Add a Comment..."
-              name="postComment"
+              placeholder="Enter Comment Here..."
             />
-            <button type="submit" class="input-group-text" id="inputGroup-sizing-sm">+</button>
+            <button type="submit" class="btn btn-success">Add Comment</button>
           </div>
-        </div>
-      </form>-->
+        </form>
+      </QuickModal>
       <h2>
         <u>Comments</u>
       </h2>
@@ -45,6 +53,7 @@
 
 <script>
 import Comments from "../components/Comments";
+import QuickModal from "../components/QuickModal";
 export default {
   name: "blog-deetz",
   data() {
@@ -65,9 +74,18 @@ export default {
     deleteBlog() {
       this.$store.dispatch("deleteBlog", this.$route.params.id);
     },
+    addComment() {
+      $("#create-comment-modal").modal("hide");
+      this.$store.dispatch("addComment", {
+        body: this.comment,
+        blogId: this.activeBlog.id,
+        creatorEmail: this.activeBlog.email,
+      });
+    },
   },
   components: {
     Comments,
+    QuickModal,
   },
 };
 </script>
