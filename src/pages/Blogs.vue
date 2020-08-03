@@ -7,7 +7,7 @@
       data-target="#create-blog-modal"
       v-if="this.$auth.isAuthenticated"
     >Post Blog</button>
-    <QuickModal id="create-blog-modal">
+    <Modal id="create-blog-modal">
       <div slot="header">Create Blog</div>
       <form @submit="createBlog" slot="body">
         <div class="form-group">
@@ -39,7 +39,7 @@
       <div slot="footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
-    </QuickModal>
+    </Modal>
     <blog v-for="blog in blogs" :blogData="blog" :key="blog.id" />
   </div>
 </template>
@@ -47,7 +47,7 @@
 
 <script>
 import Blog from "../components/Blog";
-import QuickModal from "../components/QuickModal";
+import Modal from "../components/Modal";
 
 export default {
   name: "blogs",
@@ -81,7 +81,7 @@ export default {
   },
   components: {
     Blog,
-    QuickModal,
+    Modal,
   },
 };
 </script>

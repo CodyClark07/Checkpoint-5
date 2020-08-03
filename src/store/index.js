@@ -11,7 +11,8 @@ export default new Vuex.Store({
     profile: {},
     blogs: [],
     activeBlog: {},
-    activeComments: {}
+    activeComments: {},
+    myBlogs: []
   },
   mutations: {
     setProfile(state, profile) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
     },
     setActiveBlog(state, blog) {
       state.activeBlog = blog
+    },
+    setMyBlog(state, blogData) {
+      state.myBlogs = blogData
     },
     setActiveComments(state, comments) {
       state.activeComments = comments
@@ -60,6 +64,14 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
+    async getMyBlogs({ commit, dispatch }) {
+      try {
+        let res = await api.get("profile/blogs")
+        commit("setMyBlogs", res.data)
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async createBlog({ commit, dispatch }, blogData) {
       try {
         let res = await api.post("blogs", blogData)
@@ -69,31 +81,43 @@ export default new Vuex.Store({
       }
     },
     async deleteBlog({ commit, dispatch }, blogId) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.value) {
-          // @ts-ignore
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
-          try {
-            api.delete("blogs/" + blogId)
-            router.push({ name: "Blogs" })
-            commit("setActiveBlog", {})
-          } catch (error) {
-            console.error(error);
-          }
-        }
-      })
+      // Swal.fire({
+      //   title: 'Are you sure?',
+      //   text: "You won't be able to revert this!",
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#3085d6',
+      //   cancelButtonColor: '#d33',
+      //   confirmButtonText: 'Yes, delete it!'
+      // }).then((result) => {
+      //   if (result.value) {
+      //     // @ts-ignore
+      //     Swal.fire(
+      //       'Deleted!',
+      //       'Your file has been deleted.',
+      //       'success'
+      //     )
+      try {
+        await api.delete("blogs/" + blogId)
+        router.push({ name: "Blogs" })
+        commit("setActiveBlog", {})
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async editBlog({ commit, dispatch }, editedBlog) {
+
+      try {
+        let res = await api.put("blogs/" + editedBlog.blogId, {
+          body: editedBlog.body,
+          title: editedBlog.title
+        })
+        console.log(editedBlog)
+        commit("setActiveBlog", editedBlog)
+        dispatch("getBlog", editedBlog.blogId)
+      } catch (error) {
+        console.error(error);
+      }
     },
     async addComment({ commit, dispatch }, commentData) {
       try {
@@ -107,31 +131,29 @@ export default new Vuex.Store({
       }
     },
     async deleteComment({ commit, dispatch }, commentData) {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        if (result.value) {
-          // @ts-ignore
-          Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          )
-          try {
-            api.delete("comments/" + commentData.id)
-            commit("setActiveComments", {})
-            dispatch("getBlog", commentData.blogId)
-          } catch (error) {
-            console.error(error);
-          }
-        }
-      })
+      // Swal.fire({
+      //   title: 'Are you sure?',
+      //   text: "You won't be able to revert this!",
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#3085d6',
+      //   cancelButtonColor: '#d33',
+      //   confirmButtonText: 'Yes, delete it!'
+      // }).then((result) => {
+      //   if (result.value) {
+      //     // @ts-ignore
+      //     Swal.fire(
+      //       'Deleted!',
+      //       'Your file has been deleted.',
+      //       'success'
+      //     )
+      try {
+        await api.delete("comments/" + commentData.id)
+        commit("setActiveComments", {})
+        dispatch("getBlog", commentData.blogId)
+      } catch (error) {
+        console.error(error);
+      }
     }
-  },
-});
+  }
+})

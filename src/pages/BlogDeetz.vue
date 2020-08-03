@@ -11,6 +11,22 @@
         :disabled="!this.$auth.isAuthenticated"
         @click="deleteBlog"
       >Delete Blog?</button>
+      <button data-toggle="modal" data-target="#edit-blog" class="btn btn-warning">Edit Blog</button>
+      <Modal id="edit-blog">
+        <div slot="header">Edit Blog</div>
+        <form slot="body" @submit="editBlog">
+          <div class="form-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter Title Here..."
+              v-model="title"
+            />
+            <input type="text" class="form-control" placeholder="Enter Body Here..." v-model="body" />
+            <button class="btn btn-success">Save Edits</button>
+          </div>
+        </form>
+      </Modal>
       <button
         type="button"
         class="btn btn-success ml-2"
@@ -18,7 +34,7 @@
         data-target="#create-comment-modal"
         v-if="this.$auth.isAuthenticated"
       >Add Comment</button>
-      <QuickModal id="create-comment-modal">
+      <Modal id="create-comment-modal">
         <div slot="header">Add Comment</div>
         <form @submit="addComment" slot="body">
           <div class="form-group">
@@ -31,7 +47,7 @@
             <button type="submit" class="btn btn-success">Add Comment</button>
           </div>
         </form>
-      </QuickModal>
+      </Modal>
       <h2>
         <u>Comments</u>
       </h2>
@@ -53,7 +69,7 @@
 
 <script>
 import Comments from "../components/Comments";
-import QuickModal from "../components/QuickModal";
+import Modal from "../components/Modal";
 export default {
   name: "blog-deetz",
   data() {
@@ -82,10 +98,18 @@ export default {
         creatorEmail: this.activeBlog.email,
       });
     },
+    editBlog() {
+      this.$store.dispatch("editBlog", {
+        title: this.title,
+        body: this.body,
+        blogId: this.activeBlog._id,
+      });
+      $("#edit-blog").modal("hide");
+    },
   },
   components: {
     Comments,
-    QuickModal,
+    Modal,
   },
 };
 </script>

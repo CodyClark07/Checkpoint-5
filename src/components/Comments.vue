@@ -1,12 +1,7 @@
 <template>
   <div>
     <h3>
-      <i
-        class="fa fa-times text-danger cursor"
-        aria-hidden="true"
-        :v-if="this.$auth.isAuthenticated"
-        @click="deleteComment"
-      ></i>
+      <i class="fa fa-times text-danger cursor" aria-hidden="true" @click="deleteComment"></i>
       {{commentData.creator.name}}: {{commentData.body}}
     </h3>
   </div>
