@@ -1,18 +1,23 @@
 <template>
   <div>
     <h3>
-      <i class="fa fa-times text-danger cursor" aria-hidden="true" @click="deleteComment"></i>
+      <i
+        class="fa fa-times text-danger cursor"
+        aria-hidden="true"
+        v-if="profile.email == commentData.creator.email"
+        @click="deleteComment"
+      ></i>
       {{commentData.creator.name}}: {{commentData.body}}
       <button
         data-toggle="modal"
-        data-target="#edit-comment"
+        :data-target="'#modal'+ commentData.id"
         class="btn btn-warning"
       >
         <i class="fa fa-pencil"></i>
       </button>
-      <Modal id="edit-comment">
+      <Modal :id="'modal'+ commentData.id">
         <div slot="header">Edit Comment</div>
-        <form slot="body" @submit="editComment(id)">
+        <form slot="body" @submit="editComment()">
           <div class="form-group">
             <input type="text" class="form-control" placeholder="Enter Body Here..." v-model="body" />
             <button class="btn btn-success">Save Edits</button>
@@ -30,11 +35,16 @@ export default {
   name: "comments",
   props: ["commentData"],
   data() {
-    return {};
+    return {
+      body: "",
+    };
   },
   computed: {
     activeBlog() {
       return this.$store.state.activeBlog;
+    },
+    profile() {
+      return this.$auth.userInfo;
     },
   },
   methods: {
@@ -51,7 +61,7 @@ export default {
         body: this.body,
         blogId: this.activeBlog.id,
       });
-      $("#edit-blog").modal("hide");
+      (this.body = ""), $("#" + commentData.id).modal("hide");
     },
   },
   components: {

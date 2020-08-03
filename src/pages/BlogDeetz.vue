@@ -1,5 +1,5 @@
 <template>
-  <div class="row justify-content-center bg-secondary">
+  <div class="row justify-content-center bg-secondary" v-if="activeBlog &&activeBlog.creator">
     <div class="blog-deetz col-6 text-white p-3">
       <h5>Creator: {{activeBlog.creator.name}}</h5>
       <img :src="activeBlog.creator.picture" alt />
@@ -73,7 +73,11 @@ import Modal from "../components/Modal";
 export default {
   name: "blog-deetz",
   data() {
-    return {};
+    return {
+      title: "",
+      body: "",
+      comment: "",
+    };
   },
   mounted() {
     this.$store.dispatch("getBlog", this.$route.params.id);
@@ -91,12 +95,13 @@ export default {
       this.$store.dispatch("deleteBlog", this.$route.params.id);
     },
     addComment() {
-      $("#create-comment-modal").modal("hide");
       this.$store.dispatch("addComment", {
         body: this.comment,
         blogId: this.activeBlog.id,
         creatorEmail: this.activeBlog.email,
       });
+      this.body = "";
+      $("#" + commentData.id).modal("hide");
     },
     editBlog() {
       this.$store.dispatch("editBlog", {
@@ -104,6 +109,7 @@ export default {
         body: this.body,
         blogId: this.activeBlog._id,
       });
+      (this.title = ""), (this.body = "");
       $("#edit-blog").modal("hide");
     },
   },

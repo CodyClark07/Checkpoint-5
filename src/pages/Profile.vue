@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     profile() {
-      return this.$store.state.profile;
+      return this.$auth.userInfo;
     },
     blogs() {
       return this.$store.state.myBlogs;

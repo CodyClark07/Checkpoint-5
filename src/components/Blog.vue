@@ -3,6 +3,7 @@
     <div class="card-body">
       <h5 class="card-title">
         <u>{{blogData.title}}</u>
+        <p>{{blogData.creator.name}}</p>
       </h5>
       <!-- <p class="card-text">{{blogData.body}}</p> -->
       <button class="btn btn-primary" @click="moveToBlogPage">Go to Blog</button>

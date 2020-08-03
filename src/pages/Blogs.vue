@@ -72,6 +72,7 @@ export default {
         title: this.title,
         body: this.body,
         img: this.imgUrl,
+        creator: this.$auth.userInfo,
       });
       this.title = "";
       this.body = "";

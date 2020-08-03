@@ -26,12 +26,13 @@ const routes = [
     path: "/blogs",
     name: "Blogs",
     component: Blogs,
-    // beforeEnter: authGuard,
+
   },
   {
     path: '/blogs/:id',
     name: 'Blog',
-    component: () => import(/* webpackChunkName: "blogdeetz" */ '../pages/BlogDeetz.vue')
+    component: () => import(/* webpackChunkName: "blogdeetz" */ '../pages/BlogDeetz.vue'),
+    beforeEnter: authGuard,
   },
 ];
 
